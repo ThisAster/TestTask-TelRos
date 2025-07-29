@@ -49,7 +49,6 @@ public class PhotoStorageService {
                             .bucket(bucket)
                             .object(objectName)
                             .method(Method.GET)
-                            .expiry(60 * 60)
                             .build()
             );
         } catch (Exception e) {

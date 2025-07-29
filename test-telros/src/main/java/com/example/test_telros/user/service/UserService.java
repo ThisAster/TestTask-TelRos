@@ -64,8 +64,8 @@ public class UserService {
             existingUser.setPhoneNumber(user.getPhoneNumber());
         }
 
-        if (user.getPhotoUrl() != null) {
-            existingUser.setPhotoUrl(user.getPhotoUrl());
+        if (user.getPhotoKey() != null) {
+            existingUser.setPhotoKey(user.getPhotoKey());
         }
 
         return userRepository.save(existingUser);

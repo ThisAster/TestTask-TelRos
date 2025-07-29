@@ -26,5 +26,5 @@ public class UserDetailsDTO {
     private LocalDate birthDate;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String photoUrl;
+    private String photoKey;
 }
