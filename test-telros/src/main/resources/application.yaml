@@ -1,0 +1,33 @@
+server:
+  port: 8888
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://db:5432/postgres
+    username: postgres
+    password: 1234
+  application:
+    name: test-telros
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+app:
+  jwt:
+    secret: "518815185815851551815i81581581859529581591591591059159fjsfa3841rjakfkaefrkssefjjfsrfj4jig4ji4ijfmisrim3rii4im4fmi4imfsiri4srmi4ii4i848528518518"
+    expiration: 86400000
+    header: Authorization
+    prefix: Bearer
+  minio:
+    endpoint: http://minio:9000
+    access-key: minioadmin
+    secret-key: minioadmin
+    bucket: user-photos
