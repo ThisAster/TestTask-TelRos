@@ -5,11 +5,13 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MinioInitializer {
 
     private final MinioClient minioClient;
@@ -27,12 +29,12 @@ public class MinioInitializer {
                 minioClient.makeBucket(
                         MakeBucketArgs.builder().bucket(bucketName).build()
                 );
-                System.out.println("Bucket '" + bucketName + "' created");
+                log.info("Bucket '{}' created", bucketName);
             } else {
-                System.out.println("Bucket '" + bucketName + "' already exists");
+                log.info("Bucket '{}' already exists", bucketName);
             }
         } catch (Exception e) {
-            System.err.println("Failed to initialize MinIO bucket: " + e.getMessage());
+            log.error("Failed to initialize MinIO bucket: {}", e.getMessage());
         }
     }
 }

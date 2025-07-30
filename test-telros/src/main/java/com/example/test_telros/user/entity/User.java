@@ -33,7 +33,6 @@ public class User implements UserDetails {
     private String lastName;
     private String firstName;
     private String middleName;
-
     private LocalDate birthDate;
     @Column(unique = true)
     private String email;

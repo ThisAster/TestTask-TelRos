@@ -1,12 +1,9 @@
 package com.example.test_telros.photo.service;
 
-import io.minio.GetObjectArgs;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PhotoStorageService {
@@ -44,15 +42,28 @@ public class PhotoStorageService {
 
     public String getPublicUrl(String fileName) {
         try {
-            return minioClient.getPresignedObjectUrl(
+
+            // Проверка на наличие файла в бакете
+            minioClient.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(fileName)
+                            .build()
+            );
+
+            // Выдача временной ссылки
+            String rawUrl = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(bucket)
                             .object(fileName)
                             .method(Method.GET)
                             .build()
             );
+
+            return rawUrl.replace("http://minio", "http://localhost");
         } catch (Exception e) {
-            throw new RuntimeException("Error getting URL photo from MinIO", e);
+            log.info("File {} not found", fileName);
+            return null;
         }
     }
 
