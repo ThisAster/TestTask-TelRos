@@ -24,13 +24,13 @@ public class PhotoStorageService {
     private String bucket;
 
     public String uploadPhoto(String username, MultipartFile file) {
-        String objectName = "users/" + username + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+        String fileName = "users/" + username + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
 
         try (InputStream is = file.getInputStream()) {
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucket)
-                            .object(objectName)
+                            .object(fileName)
                             .stream(is, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
@@ -39,7 +39,7 @@ public class PhotoStorageService {
             throw new RuntimeException("Error loading photo from MinIO", e);
         }
 
-        return objectName;
+        return fileName;
     }
 
     public String getPublicUrl(String objectName) {
@@ -56,12 +56,12 @@ public class PhotoStorageService {
         }
     }
 
-    public InputStream downloadPhoto(String objectName) {
+    public InputStream downloadPhoto(String fileName) {
         try {
             return minioClient.getObject(
                     GetObjectArgs.builder()
                             .bucket(bucket)
-                            .object(objectName)
+                            .object(fileName)
                             .build()
             );
         } catch (Exception e) {
@@ -70,11 +70,11 @@ public class PhotoStorageService {
 
     }
 
-    public void deletePhoto(String objectName) {
+    public void deletePhoto(String fileName) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .bucket(bucket)
-                    .object(objectName)
+                    .object(fileName)
                     .build());
         } catch (Exception e) {
             throw new RuntimeException("Error deleting photo from MinIO", e);
