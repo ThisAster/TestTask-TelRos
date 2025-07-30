@@ -1,10 +1,9 @@
 package com.example.test_telros.user.controller;
 
-import com.example.test_telros.photo.service.PhotoStorageService;
-import com.example.test_telros.user.mapper.UserMapper;
 import com.example.test_telros.user.dto.UserContactDTO;
 import com.example.test_telros.user.dto.UserDetailsDTO;
 import com.example.test_telros.user.entity.User;
+import com.example.test_telros.user.mapper.UserMapper;
 import com.example.test_telros.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final PhotoStorageService photoStorageService;
     private final UserMapper userMapper;
 
     @PreAuthorize("hasRole('USER')")
@@ -42,7 +40,7 @@ public class UserController {
 
         User user = userService.getUserByLogin(username);
 
-        return ResponseEntity.ok(userMapper.toDetailsDto(user, photoStorageService));
+        return ResponseEntity.ok(userMapper.toDetailsDto(user));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,7 +55,7 @@ public class UserController {
     @GetMapping("/{username}/details")
     public ResponseEntity<UserDetailsDTO> getUserDetailsInfo(@PathVariable String username) {
         User user = userService.getUserByLogin(username);
-        UserDetailsDTO userDetailsDTO = userMapper.toDetailsDto(user, photoStorageService);
+        UserDetailsDTO userDetailsDTO = userMapper.toDetailsDto(user);
         return ResponseEntity.ok(userDetailsDTO);
     }
 
@@ -74,7 +72,7 @@ public class UserController {
     public ResponseEntity<UserDetailsDTO> updateUserDetailsInfo(@PathVariable String username, @RequestBody @Validated UserDetailsDTO userDetailsDTO) {
         User user = userService.getUserByLogin(username);
         User updatedUser = userService.updateDetailsInfoUser(user.getUsername(), userMapper.toUser(userDetailsDTO));
-        return ResponseEntity.ok(userMapper.toDetailsDto(updatedUser, photoStorageService));
+        return ResponseEntity.ok(userMapper.toDetailsDto(updatedUser));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

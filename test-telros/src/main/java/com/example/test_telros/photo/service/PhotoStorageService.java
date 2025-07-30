@@ -1,7 +1,9 @@
 package com.example.test_telros.photo.service;
 
-import io.minio.*;
-import io.minio.http.Method;
+import io.minio.GetObjectArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,33 +40,6 @@ public class PhotoStorageService {
         }
 
         return fileName;
-    }
-
-    public String getPublicUrl(String fileName) {
-        try {
-
-            // Проверка на наличие файла в бакете
-            minioClient.statObject(
-                    StatObjectArgs.builder()
-                            .bucket(bucket)
-                            .object(fileName)
-                            .build()
-            );
-
-            // Выдача временной ссылки
-            String rawUrl = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .bucket(bucket)
-                            .object(fileName)
-                            .method(Method.GET)
-                            .build()
-            );
-
-            return rawUrl.replace("http://minio", "http://localhost");
-        } catch (Exception e) {
-            log.info("File {} not found", fileName);
-            return null;
-        }
     }
 
     public InputStream downloadPhoto(String fileName) {
