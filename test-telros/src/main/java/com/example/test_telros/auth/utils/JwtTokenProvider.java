@@ -79,6 +79,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
+            log.info("JWT token validated");
             return true;
         } catch (SecurityException ex) {
             log.error("Invalid JWT signature");

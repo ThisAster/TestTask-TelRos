@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ public class PhotoController {
     private final UserService userService;
     private final PhotoStorageService photoStorageService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPhoto(@PathVariable String username,
                                               @RequestParam("file") MultipartFile file) {
@@ -36,6 +38,7 @@ public class PhotoController {
         return ResponseEntity.ok(fileName);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/photo-url")
     public ResponseEntity<String> getPhotoUrl(@PathVariable String username) {
         User user = userService.getUserByLogin(username);
@@ -48,6 +51,7 @@ public class PhotoController {
         return ResponseEntity.ok(url);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deletePhoto(@PathVariable String username) {
         User user = userService.getUserByLogin(username);
@@ -62,6 +66,7 @@ public class PhotoController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadPhoto(@PathVariable String username) {
         User user = userService.getUserByLogin(username);
