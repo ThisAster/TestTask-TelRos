@@ -1,6 +1,7 @@
 package com.example.test_telros.user.service;
 
 import com.example.test_telros.user.entity.User;
+import com.example.test_telros.user.exception.EntityNotFoundException;
 import com.example.test_telros.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,17 +16,18 @@ public class UserService {
 
     public User getUserByLogin(String login) {
         return userRepository.findByUsername(login)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
-    public User updateContactInfoUser(Long userId, User user) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+
+    public User updateContactInfoUser(String login, User user) {
+        User existingUser = userRepository.findByUsername(login)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getEmail() != null) {
             existingUser.setEmail(user.getEmail());
@@ -37,9 +39,9 @@ public class UserService {
         return userRepository.save(existingUser);
     }
 
-    public User updateDetailsInfoUser(Long userId, User user) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public User updateDetailsInfoUser(String login, User user) {
+        User existingUser = userRepository.findByUsername(login)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         if (user.getUsername() != null) {
             existingUser.setUsername(user.getUsername());
@@ -74,7 +76,7 @@ public class UserService {
 
     public void deleteUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         userRepository.delete(user);
     }

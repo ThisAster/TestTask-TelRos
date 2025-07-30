@@ -42,12 +42,12 @@ public class PhotoStorageService {
         return fileName;
     }
 
-    public String getPublicUrl(String objectName) {
+    public String getPublicUrl(String fileName) {
         try {
             return minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .bucket(bucket)
-                            .object(objectName)
+                            .object(fileName)
                             .method(Method.GET)
                             .build()
             );

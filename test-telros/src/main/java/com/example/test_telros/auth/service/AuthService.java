@@ -2,6 +2,8 @@ package com.example.test_telros.auth.service;
 
 import com.example.test_telros.auth.dto.RegisterRequestDTO;
 import com.example.test_telros.auth.entity.Role;
+import com.example.test_telros.auth.exception.EntityAlreadyExistsException;
+import com.example.test_telros.auth.exception.EntityNotFoundException;
 import com.example.test_telros.auth.repository.RoleRepository;
 import com.example.test_telros.user.entity.User;
 import com.example.test_telros.user.repository.UserRepository;
@@ -21,11 +23,11 @@ public class AuthService {
 
     public User registerUser(RegisterRequestDTO registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new RuntimeException("Username is already in use");
+            throw new EntityAlreadyExistsException("Username is already in use");
         }
 
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("Email is already in use");
+            throw new EntityAlreadyExistsException("Email is already in use");
         }
 
         User user = User.builder()
@@ -40,7 +42,7 @@ public class AuthService {
                 .build();
 
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                .orElseThrow(() -> new EntityNotFoundException("Error: Role is not found."));
 
         user.setRoles(Collections.singleton(userRole));
 
