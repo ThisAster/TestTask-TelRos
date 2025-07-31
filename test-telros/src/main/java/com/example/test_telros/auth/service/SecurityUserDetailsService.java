@@ -20,10 +20,4 @@ public class SecurityUserDetailsService implements UserDetailsService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
-
-    @Transactional
-    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
-    }
 }

@@ -43,7 +43,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenProvider.generateToken(authentication);
-        log.debug("Пользователь {} успешно авторизирован", loginRequest.getUsername());
+        log.debug("User {} successfully authorized", loginRequest.getUsername());
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwt)
                 .build();

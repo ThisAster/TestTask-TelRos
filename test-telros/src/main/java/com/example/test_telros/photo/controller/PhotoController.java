@@ -39,6 +39,20 @@ public class PhotoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/photo-url")
+    public ResponseEntity<String> getPhotoUrl(@PathVariable String username) {
+        User user = userService.getUserByLogin(username);
+
+        if (user.getPhotoKey() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String url = photoStorageService.getPublicUrl(user.getPhotoKey());
+
+        return ResponseEntity.ok(url);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deletePhoto(@PathVariable String username) {
         User user = userService.getUserByLogin(username);
